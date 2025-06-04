@@ -13,4 +13,6 @@ dependencies = [
     "pydantic-settings>=2.7.0",
     "openai>=1.84.0",
     "uvicorn>=0.34.3",
+    "pillow>=10.0.0",
+    "python-multipart>=0.0.20",
 ]

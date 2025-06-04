@@ -2,6 +2,7 @@ from fastapi.responses import JSONResponse
 from fastapi import APIRouter
 
 from .research import research_router
+from .moderation import moderation_router
 
 
 api_router = APIRouter(
@@ -10,6 +11,9 @@ api_router = APIRouter(
 
 # Include research agent routes
 api_router.include_router(research_router)
+
+# Include content moderation routes
+api_router.include_router(moderation_router)
 
 
 

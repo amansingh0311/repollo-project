@@ -1,55 +1,49 @@
-# AI Research Assistant Backend
+# Multi-Agent AI System Backend
 
-A sophisticated AI-powered research assistant that can answer complex queries by searching the web and synthesizing information from multiple sources. Built with FastAPI and OpenAI's latest web search capabilities.
+A comprehensive AI agent system featuring two sophisticated agents: an AI Research Assistant with web search capabilities and a Multi-Modal Content Moderator for safety and policy compliance. Built with FastAPI and OpenAI's latest models.
 
-## Features
+## 🤖 **AI Agents Overview**
 
-### 🔍 **Web Search Integration**
+### 1. 🔍 **AI Research Assistant**
 
-- Uses OpenAI's `gpt-4o-search-preview` model for real-time web search
-- Configurable search context size (low, medium, high)
-- Geographic search customization
-- Multi-source information gathering
+Advanced research agent with LLM-based validation and web search capabilities.
 
-### 🧠 **Multi-Step Reasoning**
+**Key Features:**
 
-- Step-by-step reasoning process with full transparency
-- Query analysis and sub-question generation
-- Information synthesis and cross-referencing
-- Detailed reasoning logs for each step
+- **Web Search Integration:** Real-time web search using OpenAI's `gpt-4o-search-preview`
+- **Advanced LLM Validation:** Sophisticated prompt injection and harmful content detection
+- **Multi-Step Reasoning:** Transparent step-by-step research process
+- **Citation Management:** Automatic source extraction and referencing
+- **Geographic Search:** Location-aware search results
+- **Safety & Security:** Input sanitization, content moderation, and output filtering
 
-### 🛡️ **Safety & Security**
+### 2. 🛡️ **Multi-Modal Content Moderator**
 
-- Input validation and sanitization
-- Harmful content detection
-- OpenAI's content moderation API integration
-- Prompt injection protection
-- Safe output filtering
+Comprehensive content safety analyzer for both images and text.
 
-### 📚 **Citation & Source Management**
+**Key Features:**
 
-- Automatic citation extraction from search results
-- URL and title preservation
-- Source credibility indicators
-- Inline citation formatting
+- **Image Analysis:** NSFW detection, violence detection, hate symbols identification
+- **OCR Text Extraction:** Extract and analyze text from images
+- **Text Analysis:** Toxicity, hate speech, harassment, and PII detection
+- **Multi-Modal Processing:** Combined analysis of images and text
+- **PII Detection & Redaction:** Automatic detection and masking of personal information
+- **Batch Processing:** Efficient analysis of multiple content items
+- **File Upload Support:** Direct image file upload and analysis
 
-### ⚡ **Performance Optimizations**
-
-- Async/await throughout
-- Configurable reasoning depth
-- Quick search option for faster responses
-- Batch processing capabilities
-
-## Quick Start
+## 🚀 **Quick Start**
 
 ### Prerequisites
 
 - Python 3.12+
-- OpenAI API key with access to search-enabled models
+- OpenAI API key with access to:
+  - `gpt-4o-search-preview` (for research)
+  - `gpt-4o-mini` (for analysis and moderation)
+  - `omni-moderation-latest` (for content moderation)
 
 ### Installation
 
-1. **Clone and setup:**
+1. **Setup Environment:**
 
 ```bash
 cd backend
@@ -57,7 +51,7 @@ python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
-2. **Install dependencies:**
+2. **Install Dependencies:**
 
 ```bash
 uv sync
@@ -65,51 +59,47 @@ uv sync
 pip install -e .
 ```
 
-3. **Environment configuration:**
+3. **Configure API Key:**
 
 ```bash
-cp .env.example .env
-# Edit .env with your API keys
+# Windows PowerShell
+$env:OPENAI_API_KEY = "your-openai-api-key-here"
+
+# Linux/Mac
+export OPENAI_API_KEY="your-openai-api-key-here"
 ```
 
-4. **Run the server:**
+4. **Test the System:**
 
 ```bash
-uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+python test_simple.py
 ```
 
-### Environment Variables
+5. **Start the Server:**
 
-Create a `.env` file in the backend directory:
-
-```env
-# OpenAI Configuration
-OPENAI_API_KEY=your-openai-api-key-here
-
-# Optional: Other AI providers
-ANTHROPIC_API_KEY=your-anthropic-key
-GROQ_API_KEY=your-groq-key
-
-# Application Mode
-MODE=development
+```bash
+python -m uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-## API Documentation
+## 📖 **API Documentation**
 
-Once running, visit:
+Once running:
 
-- **API Docs:** http://localhost:8000/swagger
-- **Health Check:** http://localhost:8000/research/health
+- **Interactive Docs:** http://localhost:8000/swagger
+- **Research Health:** http://localhost:8000/research/health
+- **Moderation Health:** http://localhost:8000/moderation/health
+
+## 🔍 **Research Agent API**
 
 ### Core Endpoints
 
-#### 1. Main Research Query
+**Advanced Research Query:**
 
 ```bash
 POST /research/query
 ```
 
-**Request Body:**
+**Example Request:**
 
 ```json
 {
@@ -127,234 +117,386 @@ POST /research/query
 }
 ```
 
-**Response:**
-
-```json
-{
-  "query": "Compare the latest electric vehicle models...",
-  "answer": "Based on my research of current electric vehicle models...",
-  "citations": [
-    {
-      "url": "https://example.com/ev-safety-report",
-      "title": "2024 EV Safety Report",
-      "start_index": 245,
-      "end_index": 290
-    }
-  ],
-  "reasoning_steps": [
-    {
-      "step_number": 1,
-      "action": "input_validation",
-      "description": "Input validation and sanitization completed",
-      "result": "SAFE: Input passed safety checks"
-    }
-  ],
-  "safety_check_passed": true,
-  "processing_time": 12.45,
-  "timestamp": "2024-01-15T10:30:00Z"
-}
-```
-
-#### 2. Quick Search
+**Quick Search:**
 
 ```bash
 POST /research/quick-search?query=your-query&context_size=low
 ```
 
-Faster endpoint with reduced reasoning steps for simple queries.
+**Query Validation:**
 
-#### 3. Batch Processing
+```bash
+POST /research/validate-query
+```
+
+**Batch Processing:**
 
 ```bash
 POST /research/batch-queries
 ```
 
-Process multiple queries efficiently (max 10 per batch).
+### Security Features
 
-#### 4. Health & Status
+The research agent includes advanced security measures:
+
+- **LLM-Based Input Validation:** Detects prompt injections, harmful requests, and manipulation attempts
+- **Contextual Content Moderation:** Evaluates search results for safety and appropriateness
+- **Query Sanitization:** Automatically cleans malicious input while preserving intent
+- **Multi-Layer Security:** Combines keyword detection, pattern matching, and AI analysis
+
+## 🛡️ **Content Moderation API**
+
+### Core Endpoints
+
+**Content Analysis:**
 
 ```bash
-GET /research/health
-GET /research/models
+POST /moderation/analyze
 ```
 
-## Usage Examples
+**Example Request:**
 
-### Basic Research Query
-
-```python
-import requests
-
-response = requests.post(
-    "http://localhost:8000/research/query",
-    json={
-        "query": "What are the latest developments in quantum computing?",
-        "context_size": "high"
-    }
-)
-
-result = response.json()
-print(f"Answer: {result['answer']}")
-print(f"Citations: {len(result['citations'])}")
-print(f"Processing time: {result['processing_time']:.2f}s")
+```json
+{
+  "text": "This is some text to analyze for safety",
+  "image_url": "https://example.com/image.jpg",
+  "strict_mode": false,
+  "check_categories": [
+    "nsfw",
+    "violence",
+    "hate",
+    "toxicity",
+    "harassment",
+    "pii"
+  ]
+}
 ```
 
-### Geographic Search
+**File Upload Analysis:**
 
-```python
-requests.post(
-    "http://localhost:8000/research/query",
-    json={
-        "query": "Best restaurants near Times Square",
-        "user_location": {
-            "type": "approximate",
-            "approximate": {
-                "country": "US",
-                "city": "New York",
-                "region": "New York"
-            }
-        }
-    }
-)
+```bash
+POST /moderation/analyze-upload
 ```
 
-### Quick Search for Simple Queries
+**Batch Analysis:**
 
-```python
-response = requests.post(
-    "http://localhost:8000/research/quick-search",
-    params={
-        "query": "Current weather in London",
-        "context_size": "low"
-    }
-)
+```bash
+POST /moderation/batch-analyze
 ```
 
-## Architecture
+**Quick Safety Check:**
 
-### Agent Structure
-
-```
-ResearchAgent
-├── Input Validation & Sanitization
-├── Query Analysis & Planning
-├── Web Search Execution
-├── Citation Extraction
-├── Content Moderation
-└── Answer Synthesis
+```bash
+POST /moderation/quick-check
 ```
 
-### Safety Measures
+### Violation Categories
 
-1. **Input Filtering:** Harmful keyword detection
-2. **Content Moderation:** OpenAI's moderation API
-3. **Output Sanitization:** Safe response formatting
-4. **Prompt Protection:** Injection attempt detection
+| Category         | Description                              | Applies To |
+| ---------------- | ---------------------------------------- | ---------- |
+| **NSFW**         | Nudity, sexual content, suggestive poses | Images     |
+| **Violence**     | Blood, weapons, fighting, gore           | Images     |
+| **Hate Symbols** | Nazi symbols, extremist imagery          | Images     |
+| **Toxicity**     | Offensive, rude language                 | Text       |
+| **Hate Speech**  | Identity-based targeting                 | Text       |
+| **Harassment**   | Threats, intimidation, bullying          | Text       |
+| **PII**          | Phone numbers, emails, addresses, SSNs   | Text       |
+
+### Risk Levels
+
+- **LOW:** Content is safe with minimal violations
+- **MEDIUM:** Minor violations, context-dependent
+- **HIGH:** Significant violations, should be reviewed
+- **CRITICAL:** Severe violations, should be blocked
+
+## 🧪 **Testing & Examples**
+
+### Comprehensive Test Suites
+
+**Research Agent Tests:**
+
+```bash
+python src/test_llm_validation.py
+```
+
+**Content Moderation Tests:**
+
+```bash
+python test_content_moderation.py
+```
+
+**Simple System Test:**
+
+```bash
+python test_simple.py
+```
+
+### Example API Calls
+
+**Research Example:**
+
+```bash
+curl -X POST "http://localhost:8000/research/query" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "query": "What are the latest developments in quantum computing?",
+       "context_size": "high"
+     }'
+```
+
+**Content Moderation Example:**
+
+```bash
+curl -X POST "http://localhost:8000/moderation/analyze" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "text": "Check out this image!",
+       "image_url": "https://example.com/image.jpg"
+     }'
+```
+
+**File Upload Example:**
+
+```bash
+curl -X POST "http://localhost:8000/moderation/analyze-upload" \
+     -F "file=@image.jpg" \
+     -F "text=Optional caption text" \
+     -F "strict_mode=false"
+```
+
+## 🏗️ **Architecture**
+
+### System Components
+
+```
+AI Agent System
+├── Research Agent
+│   ├── LLM Input Validation
+│   ├── Query Analysis & Planning
+│   ├── Web Search Execution
+│   ├── Citation Extraction
+│   ├── Content Moderation
+│   └── Answer Synthesis
+├── Content Moderation Agent
+│   ├── Input Validation
+│   ├── Image Analysis (Vision API)
+│   ├── OCR Text Extraction
+│   ├── Text Analysis
+│   ├── OpenAI Moderation
+│   └── Result Aggregation
+└── Shared Infrastructure
+    ├── FastAPI Server
+    ├── Pydantic Models
+    ├── Error Handling
+    └── Logging
+```
 
 ### Models Used
 
-- **Search:** `gpt-4o-search-preview` (primary web search)
-- **Analysis:** `gpt-4o-mini` (query analysis & synthesis)
-- **Moderation:** `omni-moderation-latest` (content safety)
+| Purpose                | Model                    | Usage                            |
+| ---------------------- | ------------------------ | -------------------------------- |
+| **Web Search**         | `gpt-4o-search-preview`  | Real-time web search             |
+| **Vision Analysis**    | `gpt-4o-mini`            | Image content analysis           |
+| **Text Analysis**      | `gpt-4o-mini`            | Validation, reasoning, synthesis |
+| **Content Moderation** | `omni-moderation-latest` | Safety validation                |
 
-## Configuration Options
+## ⚙️ **Configuration**
+
+### Environment Variables
+
+```env
+# Required
+OPENAI_API_KEY=your-openai-api-key-here
+
+# Optional
+ANTHROPIC_API_KEY=your-anthropic-key
+GROQ_API_KEY=your-groq-key
+MODE=development
+```
 
 ### Search Context Sizes
 
-- **Low:** Fastest, least comprehensive (~50 tokens)
-- **Medium:** Balanced performance (~200 tokens)
-- **High:** Most comprehensive, slower (~500 tokens)
+- **Low:** Fastest, ~50 tokens context
+- **Medium:** Balanced, ~200 tokens context
+- **High:** Comprehensive, ~500 tokens context
 
-### Reasoning Steps
+### Processing Limits
 
-- **Minimum:** 1 step (validation only)
-- **Default:** 5 steps (full reasoning)
-- **Maximum:** 10 steps (detailed analysis)
+- **Research Agent:** Max 10 reasoning steps, 1000 char queries
+- **Content Moderation:** Max 20 batch items, 50MB images
+- **API Rate Limits:** Automatic delays and throttling
 
-## Error Handling
+## 🔒 **Security Features**
 
-The agent includes comprehensive error handling:
+### Research Agent Security
 
-- Graceful degradation for API failures
-- Detailed error logging
-- User-friendly error messages
-- Automatic retry mechanisms
+1. **Advanced Input Validation:** LLM-powered detection of:
 
-## Rate Limits & Costs
+   - Prompt injection attempts
+   - System manipulation requests
+   - Harmful content requests
+   - Social engineering attempts
 
-- **Search Context:** Affects cost and latency
-- **Batch Limits:** Max 10 queries per batch
-- **Rate Limiting:** Built-in delays for batch processing
-- **Cost Optimization:** Configurable context sizes
+2. **Content Safety:** Multi-layer moderation of:
 
-## Development
+   - Search results
+   - Generated responses
+   - Citation content
+   - User inputs
 
-### Running Tests
+3. **Query Sanitization:** Automatic cleaning while preserving intent
+
+### Content Moderation Security
+
+1. **Robust Detection:** Multi-modal analysis for:
+
+   - Visual content violations
+   - Text-based violations
+   - Hidden text in images
+   - PII exposure
+
+2. **Evasion Protection:** Defense against:
+   - Obfuscated harmful content
+   - Blurred or modified images
+   - Text manipulation techniques
+   - Multi-modal attack vectors
+
+## 📊 **Performance & Monitoring**
+
+### Performance Metrics
+
+- **Research Agent:** ~8-15 seconds for comprehensive analysis
+- **Content Moderation:** ~3-8 seconds for multi-modal analysis
+- **Batch Processing:** Optimized for throughput vs. latency
+- **Memory Usage:** Efficient processing with minimal memory footprint
+
+### Monitoring Features
+
+- Detailed processing step logs
+- Performance timing metrics
+- Error rate tracking
+- Safety decision transparency
+- Resource usage monitoring
+
+## 🚀 **Production Deployment**
+
+### Docker Support
 
 ```bash
-pytest tests/
+docker build -t ai-agent-system .
+docker run -p 8000:8000 -e OPENAI_API_KEY=your-key ai-agent-system
 ```
+
+### Scaling Considerations
+
+- **Horizontal Scaling:** Stateless design supports multiple instances
+- **Rate Limiting:** Built-in protection against API abuse
+- **Caching:** Response caching for frequently requested content
+- **Load Balancing:** Compatible with standard load balancers
+
+## 🛠️ **Development**
 
 ### Code Quality
 
 ```bash
+# Code formatting
 black src/
 flake8 src/
 mypy src/
+
+# Testing
+pytest tests/
+python test_simple.py
 ```
 
-### Docker
+### Development Server
 
 ```bash
-docker build -t research-agent .
-docker run -p 8000:8000 research-agent
+uvicorn src.main:app --reload --log-level debug
 ```
 
-## Security Considerations
+## 📝 **API Response Examples**
 
-1. **API Keys:** Never commit API keys to version control
-2. **Input Validation:** All user inputs are sanitized
-3. **Content Filtering:** Automatic moderation of all outputs
-4. **Rate Limiting:** Prevents abuse of external APIs
-5. **Error Handling:** No sensitive information in error messages
+### Research Agent Response
 
-## Troubleshooting
-
-### Common Issues
-
-1. **OpenAI API Key Issues:**
-
-   - Ensure key has access to search-enabled models
-   - Check API quota and billing status
-
-2. **Search Model Unavailable:**
-
-   - Fallback to regular models implemented
-   - Check OpenAI service status
-
-3. **Slow Response Times:**
-   - Reduce context_size to 'low'
-   - Limit max_reasoning_steps
-   - Use quick-search endpoint
-
-### Logs
-
-```bash
-# Check application logs
-tail -f logs/research_agent.log
-
-# Debug mode
-MODE=development uvicorn src.main:app --reload --log-level debug
+```json
+{
+  "query": "Latest developments in AI",
+  "answer": "Based on recent research...",
+  "citations": [
+    {
+      "url": "https://example.com/ai-report",
+      "title": "2024 AI Report",
+      "start_index": 150,
+      "end_index": 200
+    }
+  ],
+  "reasoning_steps": [
+    {
+      "step_number": 1,
+      "action": "llm_input_validation",
+      "description": "Advanced input validation completed",
+      "result": "SAFE: Query analyzed for legitimate research intent"
+    }
+  ],
+  "safety_check_passed": true,
+  "processing_time": 12.45
+}
 ```
 
-## Contributing
+### Content Moderation Response
+
+```json
+{
+  "is_safe": false,
+  "overall_risk_level": "HIGH",
+  "summary": "🚫 Content is NOT SAFE: Detected violations in toxicity, pii",
+  "rationale": "Content contains offensive language and personal information",
+  "image_analysis": {
+    "has_nsfw": false,
+    "has_violence": false,
+    "has_hate_symbols": false,
+    "extracted_text": "Contact me at john@example.com"
+  },
+  "text_analysis": {
+    "has_toxicity": true,
+    "has_pii": true,
+    "cleaned_text": "Contact me at [EMAIL_REDACTED]"
+  },
+  "violations_found": [
+    {
+      "category": "toxicity",
+      "detected": true,
+      "confidence": 0.85,
+      "description": "Offensive language detected"
+    }
+  ],
+  "processing_time": 5.23
+}
+```
+
+## 🤝 **Contributing**
 
 1. Fork the repository
 2. Create a feature branch
-3. Add tests for new functionality
+3. Add comprehensive tests
 4. Ensure all tests pass
 5. Submit a pull request
 
-## License
+## 📄 **License**
 
 This project is licensed under the MIT License.
+
+---
+
+## 🎯 **Key Advantages**
+
+✅ **Dual-Agent Architecture:** Specialized agents for different use cases  
+✅ **Advanced Security:** Multi-layer protection and validation  
+✅ **Multi-Modal Capabilities:** Handle text, images, and combined content  
+✅ **Transparent Processing:** Full visibility into decision-making  
+✅ **Production Ready:** Comprehensive error handling and monitoring  
+✅ **Scalable Design:** Stateless architecture for easy scaling  
+✅ **Extensive Testing:** Comprehensive test suites for reliability
+
+Perfect for applications requiring both intelligent research capabilities and robust content safety measures!
